@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/akhils0810/Car_automotive.git
+    repoURL: https://github.com/car-automotive/Car_automotive.git
     targetRevision: car-automotive
     path: k8s/overlays/dev
   destination:
