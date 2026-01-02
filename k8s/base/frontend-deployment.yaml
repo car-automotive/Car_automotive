@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-frontend:latest
+          image: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-frontend:latest
           ports:
             - containerPort: 3000
               protocol: TCP

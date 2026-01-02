@@ -12,10 +12,10 @@ permissions:
 
 env:
   APP_NAME: car-automotive-test1
-  AWS_ACCOUNT_ID: "792373136340"
+  AWS_ACCOUNT_ID: "058264492241"
   ECR_REGION: us-west-2
-  EKS_REGION: us-west-1
-  CLUSTER_NAME: argocd-nonprod-eks
+  EKS_REGION: us-west-2
+  CLUSTER_NAME: car-automotive-eks
   ENDPOINT: https://car-automotive-test1.agents.opsera-labs.com
 
 jobs:

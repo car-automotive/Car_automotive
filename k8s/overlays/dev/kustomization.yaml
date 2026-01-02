@@ -8,9 +8,9 @@ resources:
   - ../../base
 
 images:
-  - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-backend
+  - name: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-backend
     newTag: latest
-  - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-frontend
+  - name: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-frontend
     newTag: latest
 
 commonLabels:
