@@ -1,19 +1,20 @@
-name: 🚗 Car Automotive - AWS Deployment Pipeline
+name: 🚗 gayathri-cartest1 - AWS Deployment Pipeline
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, gayathri-cartest1]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, gayathri-cartest1]
   workflow_dispatch:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY_BACKEND: car-automotive-backend
-  ECR_REPOSITORY_FRONTEND: car-automotive-frontend
-  ECS_CLUSTER: car-automotive-cluster
-  ECS_SERVICE_BACKEND: car-automotive-backend-service
-  ECS_SERVICE_FRONTEND: car-automotive-frontend-service
+  ECR_REPOSITORY_BACKEND: gayathri-cartest1-backend
+  ECR_REPOSITORY_FRONTEND: gayathri-cartest1-frontend
+  ECS_CLUSTER: gayathri-cartest1-cluster
+  ECS_SERVICE_BACKEND: gayathri-cartest1-backend-service
+  ECS_SERVICE_FRONTEND: gayathri-cartest1-frontend-service
+  PIPELINE_NAME: gayathri-cartest1
 
 jobs:
   # ═══════════════════════════════════════════════════════════════
