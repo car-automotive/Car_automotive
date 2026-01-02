@@ -1,0 +1,300 @@
+# Car Automotive - Full-Stack Web Application
+
+A modern, production-ready full-stack car automotive platform built with React, Node.js, Express, and MongoDB.
+
+## 🚀 Features
+
+### User Features
+- User authentication (Register, Login, Logout)
+- Profile management
+- Browse cars by brand, price, fuel type, transmission, body type
+- Car detail pages with image gallery, specifications, and features
+- Book test drives (date & location)
+- Add cars to wishlist
+- View booking history
+- Search and filter cars
+- Responsive design with dark mode support
+
+### Admin Features
+- Secure admin dashboard
+- Add/Edit/Delete cars
+- Upload multiple car images (Cloudinary integration)
+- Manage test drive bookings
+- Manage users and roles
+- Mark cars as featured/out of stock
+- Analytics dashboard with statistics
+
+## 🛠️ Tech Stack
+
+### Frontend
+- React 18
+- Vite
+- Tailwind CSS
+- Redux Toolkit
+- React Router
+- Axios
+- React Hot Toast
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB with Mongoose
+- JWT Authentication (Access + Refresh Tokens)
+- Cloudinary (Image Storage)
+- Express Validator
+
+## 📁 Project Structure
+
+```
+car-automotive/
+├── backend/
+│   ├── config/
+│   │   └── cloudinary.config.js
+│   ├── controllers/
+│   │   ├── admin.controller.js
+│   │   ├── auth.controller.js
+│   │   ├── booking.controller.js
+│   │   ├── car.controller.js
+│   │   └── user.controller.js
+│   ├── middleware/
+│   │   ├── auth.middleware.js
+│   │   └── errorHandler.js
+│   ├── models/
+│   │   ├── Booking.model.js
+│   │   ├── Car.model.js
+│   │   └── User.model.js
+│   ├── routes/
+│   │   ├── admin.routes.js
+│   │   ├── auth.routes.js
+│   │   ├── booking.routes.js
+│   │   ├── car.routes.js
+│   │   └── user.routes.js
+│   ├── utils/
+│   │   └── generateToken.js
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── package.json
+│   └── server.js
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── auth/
+│   │   │   ├── cars/
+│   │   │   ├── common/
+│   │   │   └── layout/
+│   │   ├── pages/
+│   │   │   ├── admin/
+│   │   │   └── ...
+│   │   ├── store/
+│   │   │   ├── slices/
+│   │   │   ├── api.js
+│   │   │   └── store.js
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── index.html
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.js
+│
+└── README.md
+```
+
+## 🚦 Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- MongoDB Atlas account (FREE - recommended, no installation needed) OR Local MongoDB
+- Cloudinary account (FREE tier available - for image uploads)
+
+### Backend Setup
+
+1. Navigate to backend directory:
+```bash
+cd backend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Create `.env` file from `.env.example`:
+```bash
+cp .env.example .env
+```
+
+4. Update `.env` with your configuration:
+```env
+PORT=5000
+NODE_ENV=development
+# MongoDB Atlas connection string (recommended - no installation needed!)
+MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/car-automotive?retryWrites=true&w=majority
+# Or for local MongoDB: mongodb://localhost:27017/car-automotive
+JWT_SECRET=your-super-secret-jwt-key
+JWT_REFRESH_SECRET=your-super-secret-refresh-jwt-key
+JWT_EXPIRE=7d
+JWT_REFRESH_EXPIRE=30d
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+FRONTEND_URL=http://localhost:5173
+```
+
+**📝 Note:** See `SETUP.md` for detailed MongoDB Atlas setup instructions (it's free and takes 5 minutes!)
+
+5. Start the backend server:
+```bash
+npm run dev
+```
+
+The backend will run on `http://localhost:5000`
+
+### Frontend Setup
+
+1. Navigate to frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the development server:
+```bash
+npm run dev
+```
+
+The frontend will run on `http://localhost:5173`
+
+## 📝 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/logout` - Logout user
+- `POST /api/auth/refresh-token` - Refresh access token
+- `GET /api/auth/me` - Get current user
+
+### Cars
+- `GET /api/cars` - Get all cars (with filters)
+- `GET /api/cars/featured` - Get featured cars
+- `GET /api/cars/search` - Search cars
+- `GET /api/cars/:id` - Get car by ID
+
+### Bookings
+- `POST /api/bookings` - Create booking (Protected)
+- `GET /api/bookings/my-bookings` - Get user bookings (Protected)
+- `GET /api/bookings/:id` - Get booking by ID (Protected)
+- `PUT /api/bookings/:id/cancel` - Cancel booking (Protected)
+- `PUT /api/bookings/:id/status` - Update booking status (Admin)
+
+### Users
+- `GET /api/users/profile` - Get user profile (Protected)
+- `PUT /api/users/profile` - Update profile (Protected)
+- `GET /api/users/wishlist` - Get wishlist (Protected)
+- `POST /api/users/wishlist/:carId` - Add to wishlist (Protected)
+- `DELETE /api/users/wishlist/:carId` - Remove from wishlist (Protected)
+
+### Admin
+- `GET /api/admin/dashboard` - Get dashboard stats (Admin)
+- `GET /api/admin/cars` - Get all cars (Admin)
+- `POST /api/admin/cars` - Create car (Admin)
+- `PUT /api/admin/cars/:id` - Update car (Admin)
+- `DELETE /api/admin/cars/:id` - Delete car (Admin)
+- `GET /api/admin/bookings` - Get all bookings (Admin)
+- `GET /api/admin/users` - Get all users (Admin)
+- `PUT /api/admin/users/:id/role` - Update user role (Admin)
+- `DELETE /api/admin/users/:id` - Delete user (Admin)
+
+## 🗄️ Database Schema
+
+### User
+- name (String, required)
+- email (String, required, unique)
+- password (String, required, hashed)
+- role (String, enum: ['USER', 'ADMIN'], default: 'USER')
+- wishlist (Array of Car IDs)
+- createdAt (Date)
+
+### Car
+- name (String, required)
+- brand (String, required)
+- price (Number, required)
+- images (Array of {url, publicId})
+- fuelType (String, enum)
+- transmission (String, enum)
+- mileage (Number)
+- engine (String)
+- features (Array of Strings)
+- specifications (Object: bodyType, seatingCapacity, safetyFeatures, color)
+- availability (String, enum)
+- featured (Boolean)
+- description (String)
+- createdAt (Date)
+
+### Booking
+- userId (ObjectId, ref: User)
+- carId (ObjectId, ref: Car)
+- date (Date, required)
+- location (String, required)
+- status (String, enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'])
+- notes (String)
+- createdAt (Date)
+
+## 🔐 Authentication
+
+The application uses JWT (JSON Web Tokens) for authentication:
+- Access tokens stored in localStorage
+- Refresh tokens stored in httpOnly cookies
+- Protected routes require valid JWT token
+- Admin routes require ADMIN role
+
+## 🎨 Features
+
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Dark Mode**: Built-in dark mode support
+- **Image Upload**: Cloudinary integration for car images
+- **Search & Filter**: Advanced filtering and search capabilities
+- **Pagination**: Efficient data loading with pagination
+- **Error Handling**: Centralized error handling
+- **Validation**: Input validation on both frontend and backend
+
+## 📦 Production Build
+
+### Backend
+```bash
+cd backend
+npm start
+```
+
+### Frontend
+```bash
+cd frontend
+npm run build
+npm run preview
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+## 👨‍💻 Author
+
+Built with ❤️ for car automotive enthusiasts
+
+---
+
+**Note**: Make sure to set up your environment variables properly before running the application. For production, use secure secrets and enable HTTPS.
+
