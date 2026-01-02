@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: car-automotive
+
+resources:
+  - ../../base
+  - namespace.yaml
+
+images:
+  - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-backend
+    newTag: latest
+  - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-frontend
+    newTag: latest
+

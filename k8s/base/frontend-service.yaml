@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: car-automotive-frontend
+  labels:
+    app: car-automotive-frontend
+    app.kubernetes.io/name: car-automotive
+    app.kubernetes.io/component: frontend
+  annotations:
+    # ExternalDNS for Route53 A record
+    external-dns.alpha.kubernetes.io/hostname: car-automotive.agents.opsera-labs.com
+    # NLB configuration
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    # ACM certificate for TLS termination
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-1:792373136340:certificate/817da31f-83bb-44f2-b8b8-ae4372cff9bd"
+    # Enable HTTPS on port 443
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: car-automotive-frontend
+
