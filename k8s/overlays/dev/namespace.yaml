@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: car-automotive-test1
+  labels:
+    app.kubernetes.io/name: car-automotive-test1
+    environment: dev
+

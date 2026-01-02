@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: car-automotive-test1-backend
+  labels:
+    app: car-automotive-test1-backend
+    app.kubernetes.io/name: car-automotive-test1
+    app.kubernetes.io/component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: car-automotive-test1-backend
+  template:
+    metadata:
+      labels:
+        app: car-automotive-test1-backend
+        app.kubernetes.io/name: car-automotive-test1
+        app.kubernetes.io/component: backend
+    spec:
+      containers:
+        - name: backend
+          image: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-backend:latest
+          ports:
+            - containerPort: 5000
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "5000"
+            - name: JWT_SECRET
+              value: "car-automotive-jwt-secret-2024-production"
+            - name: FRONTEND_URL
+              value: "https://car-automotive-test1.agents.opsera-labs.com"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      securityContext:
+        fsGroup: 1001
+
