@@ -1,22 +1,25 @@
+# ============================================
+# ArgoCD Application for Car Automotive
+# ============================================
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: car-automotive-test1
+  name: car-automotive
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  
+
   source:
-    repoURL: https://github.com/car-automotive/Car_automotive.git
-    targetRevision: car-automotive-test1
-    path: k8s/overlays/dev
-  
+    repoURL: https://github.com/opsera-ai/fullstackapp.git
+    targetRevision: firstcicdtest
+    path: Car_automotive/k8s/overlays/dev
+
   destination:
     server: https://kubernetes.default.svc
-    namespace: car-automotive-test1
-  
+    namespace: car-automotive
+
   syncPolicy:
     automated:
       prune: true
@@ -26,12 +29,6 @@ spec:
       - CreateNamespace=true
       - PrunePropagationPolicy=foreground
       - PruneLast=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
-  
-  revisionHistoryLimit: 10
+
+  revisionHistoryLimit: 3
 

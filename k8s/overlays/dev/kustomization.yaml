@@ -1,17 +1,21 @@
+# ============================================
+# Kustomize Dev Overlay Configuration
+# ============================================
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: car-automotive-test1
+namespace: car-automotive
 
 resources:
   - namespace.yaml
   - ../../base
 
 images:
-  - name: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-backend
-    newTag: 9eb2f41
-  - name: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-frontend
-    newTag: 9eb2f41
+  - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-backend
+    newTag: latest
+  - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-frontend
+    newTag: latest
 
 commonLabels:
   environment: dev
+

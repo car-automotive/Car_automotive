@@ -1,18 +1,20 @@
+# ============================================
+# Car Automotive Backend Service
+# ============================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: car-automotive-test1-backend
+  name: car-automotive-backend
   labels:
-    app: car-automotive-test1-backend
-    app.kubernetes.io/name: car-automotive-test1
-    app.kubernetes.io/component: backend
+    app: car-automotive-backend
+    component: backend
 spec:
   type: ClusterIP
+  selector:
+    app: car-automotive-backend
   ports:
-    - port: 5000
+    - name: http
+      port: 5000
       targetPort: 5000
       protocol: TCP
-      name: http
-  selector:
-    app: car-automotive-test1-backend
 

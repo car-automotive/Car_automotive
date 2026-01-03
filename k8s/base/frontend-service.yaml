@@ -1,20 +1,28 @@
+# ============================================
+# Car Automotive Frontend Service (LoadBalancer)
+# ============================================
+# Exposes frontend with NLB + HTTPS via ACM certificate
 apiVersion: v1
 kind: Service
 metadata:
-  name: car-automotive-test1-frontend
+  name: car-automotive-frontend
   labels:
-    app: car-automotive-test1-frontend
-    app.kubernetes.io/name: car-automotive-test1
-    app.kubernetes.io/component: frontend
+    app: car-automotive-frontend
+    component: frontend
   annotations:
-    # ExternalDNS creates Route53 A record automatically
-    external-dns.alpha.kubernetes.io/hostname: car-automotive-test1.agents.opsera-labs.com
-    # NLB with HTTPS (TLS termination at load balancer)
+    # ExternalDNS - automatically creates Route53 record
+    external-dns.alpha.kubernetes.io/hostname: car-automotive.agents.opsera-labs.com
+    # AWS NLB configuration
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-1:792373136340:certificate/817da31f-83bb-44f2-b8b8-ae4372cff9bd"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    # SSL/TLS termination at NLB
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: "arn:aws:acm:us-west-1:792373136340:certificate/817da31f-81aa-4e0a-9234-85ae66b0cfb8"
     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "tcp"
 spec:
   type: LoadBalancer
+  selector:
+    app: car-automotive-frontend
   ports:
     - name: http
       port: 80
@@ -24,6 +32,4 @@ spec:
       port: 443
       targetPort: 3000
       protocol: TCP
-  selector:
-    app: car-automotive-test1-frontend
 

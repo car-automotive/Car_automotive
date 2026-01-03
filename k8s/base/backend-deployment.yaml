@@ -1,26 +1,27 @@
+# ============================================
+# Car Automotive Backend Deployment
+# ============================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: car-automotive-test1-backend
+  name: car-automotive-backend
   labels:
-    app: car-automotive-test1-backend
-    app.kubernetes.io/name: car-automotive-test1
-    app.kubernetes.io/component: backend
+    app: car-automotive-backend
+    component: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: car-automotive-test1-backend
+      app: car-automotive-backend
   template:
     metadata:
       labels:
-        app: car-automotive-test1-backend
-        app.kubernetes.io/name: car-automotive-test1
-        app.kubernetes.io/component: backend
+        app: car-automotive-backend
+        component: backend
     spec:
       containers:
         - name: backend
-          image: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-backend:latest
+          image: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-backend:latest
           ports:
             - containerPort: 5000
               protocol: TCP
@@ -30,9 +31,13 @@ spec:
             - name: PORT
               value: "5000"
             - name: JWT_SECRET
-              value: "car-automotive-jwt-secret-2024-production"
+              valueFrom:
+                secretKeyRef:
+                  name: car-automotive-secrets
+                  key: jwt-secret
+                  optional: true
             - name: FRONTEND_URL
-              value: "https://car-automotive-test1.agents.opsera-labs.com"
+              value: "https://car-automotive.agents.opsera-labs.com"
           resources:
             requests:
               memory: "128Mi"
@@ -44,8 +49,8 @@ spec:
             httpGet:
               path: /api/health
               port: 5000
-            initialDelaySeconds: 10
-            periodSeconds: 30
+            initialDelaySeconds: 15
+            periodSeconds: 20
             timeoutSeconds: 5
             failureThreshold: 3
           readinessProbe:
@@ -59,14 +64,13 @@ spec:
           securityContext:
             runAsNonRoot: true
             runAsUser: 1001
-            readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
           volumeMounts:
             - name: tmp
               mountPath: /tmp
       volumes:
         - name: tmp
           emptyDir: {}
-      securityContext:
-        fsGroup: 1001
+      restartPolicy: Always
 

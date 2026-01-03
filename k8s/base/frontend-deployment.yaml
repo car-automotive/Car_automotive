@@ -1,26 +1,27 @@
+# ============================================
+# Car Automotive Frontend Deployment
+# ============================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: car-automotive-test1-frontend
+  name: car-automotive-frontend
   labels:
-    app: car-automotive-test1-frontend
-    app.kubernetes.io/name: car-automotive-test1
-    app.kubernetes.io/component: frontend
+    app: car-automotive-frontend
+    component: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: car-automotive-test1-frontend
+      app: car-automotive-frontend
   template:
     metadata:
       labels:
-        app: car-automotive-test1-frontend
-        app.kubernetes.io/name: car-automotive-test1
-        app.kubernetes.io/component: frontend
+        app: car-automotive-frontend
+        component: frontend
     spec:
       containers:
         - name: frontend
-          image: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-frontend:latest
+          image: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-frontend:latest
           ports:
             - containerPort: 3000
               protocol: TCP
@@ -36,8 +37,8 @@ spec:
               path: /health
               port: 3000
             initialDelaySeconds: 10
-            periodSeconds: 30
-            timeoutSeconds: 5
+            periodSeconds: 20
+            timeoutSeconds: 3
             failureThreshold: 3
           readinessProbe:
             httpGet:
@@ -48,21 +49,23 @@ spec:
             timeoutSeconds: 3
             failureThreshold: 3
           securityContext:
-            runAsNonRoot: false
-            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 1001
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
           volumeMounts:
-            - name: tmp
-              mountPath: /tmp
             - name: cache
               mountPath: /var/cache/nginx
             - name: run
               mountPath: /var/run
+            - name: tmp
+              mountPath: /tmp
       volumes:
-        - name: tmp
-          emptyDir: {}
         - name: cache
           emptyDir: {}
         - name: run
           emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+      restartPolicy: Always
 

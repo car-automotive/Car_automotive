@@ -1,16 +1,19 @@
+# ============================================
+# Kustomize Base Configuration
+# ============================================
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 metadata:
-  name: car-automotive-test1
-
-commonLabels:
-  app.kubernetes.io/name: car-automotive-test1
-  app.kubernetes.io/managed-by: kustomize
+  name: car-automotive-base
 
 resources:
   - backend-deployment.yaml
   - backend-service.yaml
   - frontend-deployment.yaml
   - frontend-service.yaml
+
+commonLabels:
+  app.kubernetes.io/name: car-automotive
+  app.kubernetes.io/managed-by: kustomize
 

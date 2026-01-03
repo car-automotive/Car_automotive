@@ -1,29 +1,37 @@
+# ============================================
+# Car Automotive CI/CD Pipeline
+# ============================================
+# Builds, tests, and deploys to AWS EKS via GitOps
+
 name: CI/CD Pipeline
 
 on:
   push:
-    branches: [car-automotive-test1]
+    branches: [firstcicdtest]
   pull_request:
-    branches: [car-automotive-test1]
+    branches: [firstcicdtest]
 
 permissions:
   contents: write
   id-token: write
 
 env:
-  APP_NAME: car-automotive-test1
-  AWS_ACCOUNT_ID: "058264492241"
+  APP_NAME: car-automotive
+  AWS_ACCOUNT_ID: "792373136340"
   ECR_REGION: us-west-2
-  EKS_REGION: us-west-2
-  CLUSTER_NAME: car-automotive-eks
-  ENDPOINT: https://car-automotive-test1.agents.opsera-labs.com
+  EKS_REGION: us-west-1
+  CLUSTER_NAME: argocd-nonprod-eks
+  ENDPOINT: https://car-automotive.agents.opsera-labs.com
 
 jobs:
+  # ==========================================
+  # Job 1: Build and Push Backend
+  # ==========================================
   build-backend:
     name: Build Backend
     runs-on: ubuntu-latest
     outputs:
-      image-tag: ${{ steps.meta.outputs.tags }}
+      image-tag: ${{ steps.meta.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,7 +61,7 @@ jobs:
         with:
           images: ${{ steps.login-ecr.outputs.registry }}/${{ env.APP_NAME }}-backend
           tags: |
-            type=sha,prefix=
+            type=sha,prefix=,format=short
             type=raw,value=latest
 
       - name: Build and push backend
@@ -66,11 +74,14 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  # ==========================================
+  # Job 2: Build and Push Frontend
+  # ==========================================
   build-frontend:
     name: Build Frontend
     runs-on: ubuntu-latest
     outputs:
-      image-tag: ${{ steps.meta.outputs.tags }}
+      image-tag: ${{ steps.meta.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -100,7 +111,7 @@ jobs:
         with:
           images: ${{ steps.login-ecr.outputs.registry }}/${{ env.APP_NAME }}-frontend
           tags: |
-            type=sha,prefix=
+            type=sha,prefix=,format=short
             type=raw,value=latest
 
       - name: Build and push frontend
@@ -113,6 +124,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  # ==========================================
+  # Job 3: Update Kustomize Manifests
+  # ==========================================
   update-kustomize:
     name: Update Kustomize
     runs-on: ubuntu-latest
@@ -128,11 +142,17 @@ jobs:
         run: |
           cd k8s/overlays/dev
           
-          # Get short SHA
+          # Get short SHA (7 characters)
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           
           # Update kustomization.yaml with new image tags
           cat > kustomization.yaml << EOF
+          # ============================================
+          # Kustomize Dev Overlay Configuration
+          # ============================================
+          # Auto-updated by CI/CD pipeline
+          # Commit: ${{ github.sha }}
+          # Updated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
           apiVersion: kustomize.config.k8s.io/v1beta1
           kind: Kustomization
 
@@ -160,7 +180,9 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: update image tags to ${{ github.sha }}"
           git push
 
-  # Pipeline Summary - shows what was built
+  # ==========================================
+  # Job 4: Pipeline Summary
+  # ==========================================
   pipeline-summary:
     name: Pipeline Summary
     runs-on: ubuntu-latest
@@ -173,17 +195,14 @@ jobs:
           echo "     🚀 CI/CD PIPELINE COMPLETE 🚀     "
           echo "========================================"
           echo ""
-          echo "✅ Backend Image:  ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.ECR_REGION }}.amazonaws.com/${{ env.APP_NAME }}-backend"
-          echo "✅ Frontend Image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.ECR_REGION }}.amazonaws.com/${{ env.APP_NAME }}-frontend"
+          echo "📦 Backend Image:  ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.ECR_REGION }}.amazonaws.com/${{ env.APP_NAME }}-backend"
+          echo "📦 Frontend Image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.ECR_REGION }}.amazonaws.com/${{ env.APP_NAME }}-frontend"
           echo ""
-          echo "📦 Images pushed to ECR successfully!"
-          echo "📝 Kubernetes manifests updated in k8s/overlays/dev/"
+          echo "✅ Images pushed to ECR successfully!"
+          echo "✅ Kubernetes manifests updated in k8s/overlays/dev/"
           echo ""
+          echo "🔄 ArgoCD will automatically sync the deployment"
+          echo ""
+          echo "🌐 Application URL: ${{ env.ENDPOINT }}"
           echo "========================================"
-          echo "          NEXT STEPS                    "
-          echo "========================================"
-          echo "To deploy to Kubernetes, you need:"
-          echo "1. An EKS cluster"
-          echo "2. ArgoCD installed and configured"
-          echo "3. Apply the ArgoCD application: kubectl apply -f gitops/argocd/application.yaml"
-          echo "========================================"
+
