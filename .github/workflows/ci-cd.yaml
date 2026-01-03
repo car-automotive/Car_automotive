@@ -274,3 +274,4 @@ jobs:
           echo "Resources:"
           kubectl get all -n ${{ env.APP_NAME }} 2>/dev/null || echo "Namespace not yet created"
 
+# CI/CD Trigger Fri Jan  2 18:04:01 CST 2026
