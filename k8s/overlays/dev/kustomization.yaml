@@ -9,9 +9,9 @@ resources:
 
 images:
   - name: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-backend
-    newTag: 9eb2f41
+    newTag: c60abc2
   - name: 058264492241.dkr.ecr.us-west-2.amazonaws.com/car-automotive-test1-frontend
-    newTag: 9eb2f41
+    newTag: c60abc2
 
 commonLabels:
   environment: dev
