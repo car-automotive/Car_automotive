@@ -1,6 +1,9 @@
 # ============================================
 # Kustomize Dev Overlay Configuration
 # ============================================
+# Auto-updated by CI/CD pipeline
+# Commit: d812513cdd76c4c4aa54dddddb52c807791345a4
+# Updated: 2026-01-03T20:25:21Z
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -12,10 +15,9 @@ resources:
 
 images:
   - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-backend
-    newTag: latest
+    newTag: d812513
   - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/car-automotive-frontend
-    newTag: latest
+    newTag: d812513
 
 commonLabels:
   environment: dev
-
